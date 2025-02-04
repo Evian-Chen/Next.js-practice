@@ -2,11 +2,13 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
 
+/* this is the root page */
+
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Link href="/chat">yooooooooooo</Link>
+        <Link href="/data">link to data</Link>
         <Image
           className={styles.logo}
           src="/next.svg"
