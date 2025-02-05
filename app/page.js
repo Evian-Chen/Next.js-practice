@@ -15,20 +15,6 @@ export default function Home() {
       alignItems: "center",
       gap: "12px" 
     }}>
-      <h2>/data</h2>
-      <p>/data page is used to test data transportation between API and backend</p>
-      <Link href="/data">
-        <button style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "8px 16px",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer"
-        }}>Go to /data page</button>
-      </Link>
-
-      <hr style={{ width: "80%", borderColor: "gray" }} />
 
       <h2>/chat</h2>
       <p>/chat page is a ChatGPT API</p>
@@ -42,6 +28,8 @@ export default function Home() {
           cursor: "pointer"
         }}>Go to /chat page</button>
       </Link>
+      
+      <hr style={{ width: "80%", borderColor: "gray" }} />
     </div>
   );
 }

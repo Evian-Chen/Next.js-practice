@@ -21,7 +21,9 @@ export async function GET() {
 // save the lastet data to user_info.json
 export async function POST(request) {
     try {
-        const body = await request.text()  // explain json file from frontend, body is a js obj
+        const bodyText = await request.text();  // explain json file from frontend, body is a js obj
+        const body = JSON.parse(bodyText);
+        console.log(body);
         const newData = {
             "userInfo": {
                 "name": body.user_name,
