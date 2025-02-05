@@ -1,0 +1,2 @@
+conv_log.json saves conversation history
+input.json is a message template

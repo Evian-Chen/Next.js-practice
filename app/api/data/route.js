@@ -6,7 +6,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const filePath = path.join(process.cwd(), 'public', 'data', 'message.json');
+const filePath = path.join(process.cwd(), 'public', 'data', 'info.json');
 
 export async function GET() {
     try {

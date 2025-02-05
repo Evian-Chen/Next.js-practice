@@ -1,6 +1,15 @@
 # nextJS-practice
 This is a practice project using Next.js with API routes and client-side fetching.
 
+## Workflow
+This project follows the steps below.
+
+### 1 Enviroment setup
+To create a project and set up everything automaticall: 
+```bash
+npx create-next-app@latest
+```
+
 ## Installation and Setup
 Follow the instructinos to run locally.
 
@@ -19,3 +28,6 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Reference
+[Next.js document](https://nextjs.org/docs)
