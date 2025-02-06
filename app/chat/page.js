@@ -17,8 +17,23 @@ export default function chatPage() {
 
     const sentMsg = async () => {
         if (!input.content) {
+            alert("Can't sent empty message");
             return;
         }
+
+        const result = await fetch("/api/chat", {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify(input)
+        });
+
+        if (!result.ok) {
+            alert("error");
+            return;
+        }
+
+        const r = await result.json();
+        alert(r.message);
     }
 
     return (

@@ -6,3 +6,10 @@ conv_log.json is also used as the input of ChatGPT message.
 
 setup.json initializes the parameters needed for requesting ChatGPT reply.
 Params can be altered by user from frontend.
+completion = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "user", "content": "»¡¥y¸Ü§a"}
+    ]
+    ... <= here's params
+)
