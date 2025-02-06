@@ -16,7 +16,7 @@ export default function chatPage() {
     });
 
     const sentMsg = async () => {
-        if (!input) {
+        if (!input.content) {
             return;
         }
     }

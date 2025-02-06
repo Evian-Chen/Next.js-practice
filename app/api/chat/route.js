@@ -12,16 +12,24 @@ const logPath = path.join(process.cwd(), "public", "chat", "conv_log.json");
 export async function POST(request) {
     try {
         const bodyMsg = await request.text();
-        const msg = JSON.stringify(bodyMsg);
+        const msg = JSON.parse(bodyMsg);
+
+        // must have content
+        if (!msg.content) {
+            return new Response(JSON.stringify({result: "error", message: "content required"}), {status: 400});
+        }
 
         // test
-        console.log(msg);
+        console.log("msg:", msg);
 
         const newMsg = {
             "role": "user",
             "content": msg.content
         };
+        result = updateLog(newMsg);
 
+        // test
+        console.log("result", result);
 
     } catch (err) {
         console.error("error: ", err);
@@ -34,9 +42,30 @@ export async function POST(request) {
 /**
  * This function update conversation history, so the history can be sent to ChatGPT API
  * to continue the conversation (so that ChatGPT can remember the content)
- * @param {*} msg : the text user typed in the text box
- * @returns 
+ * @param {*} msg : JSON, the text user typed in the text box
+ * @returns : result of updating conv_log.json
  */
-function updateLog(msg) {
-    return;
+async function updateLog (msg) {
+    try{
+        const history = await fs.readFile(logPath);
+        const jsonHistory = JSON.parse(history);
+
+        // test
+        console.log("jsonHistory: ". jsonHistory);
+
+        jsonHistory.messaage.push({
+            "role": "user",
+            "content": msg
+        });
+
+        await fs.writeFile(logPath, JSON.stringify(jsonHistory, null, 4), "utf-8");
+
+        return new Response(JSON.stringify({result: "OK", messaage: "msg saved!"}), {
+            status: 200,
+            headers: {"content-type": "application/json"}
+        });
+    } catch (err) {
+        return new Response(JSON.stringify({result: "error", message: "invalid json data"}), {status: 500});
+    }
+      
 }
