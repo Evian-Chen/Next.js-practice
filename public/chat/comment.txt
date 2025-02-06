@@ -1,2 +1,8 @@
-conv_log.json saves conversation history
-input.json is a message template
+msg_template.json is a fixed format and is used to request response from ChatGPT API.
+User sent a json to ChatGPT API client and get a json file including detailed information of the conversation.
+
+conv_log.json only contains the system hint initially, then the follow-up conversation will all be saved in this json.
+conv_log.json is also used as the input of ChatGPT message.
+
+setup.json initializes the parameters needed for requesting ChatGPT reply.
+Params can be altered by user from frontend.

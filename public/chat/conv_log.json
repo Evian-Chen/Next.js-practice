@@ -1,0 +1,6 @@
+{
+    "message": [{
+        "role": "system",
+        "content": "You are a helpful assistent."
+    }]
+}
