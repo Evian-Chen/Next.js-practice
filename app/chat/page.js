@@ -10,11 +10,12 @@ import { useState } from "react";
 import Form from 'next/form';
 
 export default function chatPage() {
-    const [input, setInput] = useState({
-        "role": "user",
-        "content": ""
-    });
+  const [input, setInput] = useState({
+    role: "user",
+    content: "",
+  });
 
+  try { 
     const sentMsg = async () => {
         if (!input.content) {
             alert("Can't sent empty message");
@@ -23,8 +24,8 @@ export default function chatPage() {
 
         const result = await fetch("/api/chat", {
             method: "POST",
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(input)
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(input),
         });
 
         if (!result.ok) {
@@ -34,30 +35,38 @@ export default function chatPage() {
 
         const r = await result.json();
         alert(r.message);
-    }
+        setInput({ ...input, content: ""});  // make sure the text bax is empty
+    };
+  } catch (err) {
+    console.error("fetch error: ", err);
+    alert("Fetch error.");
+  }
 
-    return (
-        <div style={{
-            backgroundColor: "black",
-            color: "white",
-            padding: "20px",
-            margin: "5px",
-            textAlign: "center", 
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "12px"
-        }}>
-            <h2>Welcome to ChatGPT API</h2>
-            <p>Type something in the text box to chat with ChatGPT</p>
+  return (
+    <div
+      style={{
+        backgroundColor: "black",
+        color: "white",
+        padding: "20px",
+        margin: "5px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "12px",
+      }}
+    >
+      <h2>Welcome to ChatGPT API</h2>
+      <p>Type something in the text box to chat with ChatGPT</p>
 
-            {/* message input box */}
-            <div className="flex w-full">
-                <input type="text" placeholder="Type something..." value={input}/>
-                <button onClick={sentMsg}>Sent</button>
-            </div>
-
-
-        </div>
-    );
+      {/* message input box */}
+      <div className="flex w-full">
+        <input type="text" 
+        placeholder="Type something..." 
+        value={input.content}
+        onChange={(e) => setInput({ ...input, content: e.target.value})} />
+        <button type="button" onClick={sentMsg}>Sent</button>
+      </div>
+    </div>
+  );
 }

@@ -26,7 +26,7 @@ export async function POST(request) {
             "role": "user",
             "content": msg.content
         };
-        result = updateLog(newMsg);
+        const result = await updateLog(newMsg);  
 
         // test
         console.log("result", result);
