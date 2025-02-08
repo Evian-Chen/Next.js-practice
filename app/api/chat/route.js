@@ -19,7 +19,7 @@ export async function POST(request) {
             return new Response(JSON.stringify({result: "error", message: "content required"}), {status: 400});
         }
 
-        // test
+        // test, success
         console.log("msg:", msg);
 
         const newMsg = {
@@ -29,7 +29,11 @@ export async function POST(request) {
         const result = await updateLog(newMsg);  // since updateLog is async
 
         // test
-        console.log("result", result);
+        console.log("result:", result);
+
+        // it needs response anyways, but here i need a function to handle 
+        // asking reply for ChatGPT, so return a temporary Response for now
+        return new Response(JSON.stringify({result: "ok", message: "msg saved"}), {status: 200});
 
     } catch (err) {
         console.error("error: ", err);
@@ -65,7 +69,6 @@ async function updateLog (msg) {
             headers: {"content-type": "application/json"}
         });
     } catch (err) {
-        return new Response(JSON.stringify({result: "error", message: "invalid json data"}), {status: 500});
+        return new Response(JSON.stringify({result: "error: ", message: "invalid json data"}), {status: 500});
     }
-      
 }

@@ -17,10 +17,10 @@ export default function chatPage() {
  
   const sentMsg = async () => {
       if (!input.content) {
-          alert("Can't sent empty message");
+          alert("Can not sent empty message");
           return;
       }
-      
+
       try {
         const result = await fetch("/api/chat", {
             method: "POST",
