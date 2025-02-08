@@ -14,14 +14,14 @@ export default function chatPage() {
     role: "user",
     content: "",
   });
-
-  try { 
-    const sentMsg = async () => {
-        if (!input.content) {
-            alert("Can't sent empty message");
-            return;
-        }
-
+ 
+  const sentMsg = async () => {
+      if (!input.content) {
+          alert("Can't sent empty message");
+          return;
+      }
+      
+      try {
         const result = await fetch("/api/chat", {
             method: "POST",
             headers: { "content-type": "application/json" },
@@ -36,11 +36,12 @@ export default function chatPage() {
         const r = await result.json();
         alert(r.message);
         setInput({ ...input, content: ""});  // make sure the text bax is empty
-    };
-  } catch (err) {
-    console.error("fetch error: ", err);
-    alert("Fetch error.");
-  }
+      } catch (err) {
+        console.error("fetch error: ", err);
+        alert("Fetch error.");
+      }
+   };
+  
 
   return (
     <div

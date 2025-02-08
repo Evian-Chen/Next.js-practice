@@ -26,7 +26,7 @@ export async function POST(request) {
             "role": "user",
             "content": msg.content
         };
-        const result = await updateLog(newMsg);  
+        const result = await updateLog(newMsg);  // since updateLog is async
 
         // test
         console.log("result", result);
@@ -42,7 +42,7 @@ export async function POST(request) {
 /**
  * This function update conversation history, so the history can be sent to ChatGPT API
  * to continue the conversation (so that ChatGPT can remember the content)
- * @param {*} msg : JSON, the text user typed in the text box
+ * @param {*} msg : JSON, the text user typed in the text box that can inputted into ChatGPT API
  * @returns : result of updating conv_log.json
  */
 async function updateLog (msg) {
@@ -51,16 +51,16 @@ async function updateLog (msg) {
         const jsonHistory = JSON.parse(history);
 
         // test
-        console.log("jsonHistory: ". jsonHistory);
+        console.log("jsonHistory: ", jsonHistory);
 
-        jsonHistory.messaage.push({
+        jsonHistory.message.push({
             "role": "user",
-            "content": msg
+            "content": msg.content
         });
 
         await fs.writeFile(logPath, JSON.stringify(jsonHistory, null, 4), "utf-8");
 
-        return new Response(JSON.stringify({result: "OK", messaage: "msg saved!"}), {
+        return new Response(JSON.stringify({result: "OK", message: "msg saved!"}), {
             status: 200,
             headers: {"content-type": "application/json"}
         });

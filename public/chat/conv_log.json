@@ -1,6 +1,12 @@
 {
-    "message": [{
-        "role": "system",
-        "content": "You are a helpful assistent."
-    }]
+    "message": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistent."
+        },
+        {
+            "role": "user",
+            "content": "hi"
+        }
+    ]
 }
