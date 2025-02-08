@@ -4,9 +4,31 @@ import path from "path";
 const templatePath = path.join(process.cwd(), "public", "chat", "msg_template.json");
 const logPath = path.join(process.cwd(), "public", "chat", "conv_log.json");
 
+/**
+ * This function initilize the conv_log.json when the server restarts
+ */
+export async function Init_log() {
+    try {
+        const init_msg = {
+            "message": [{
+                "role": "system",
+                "content": "You're a helpful assistent"
+            }]
+        };
+    
+        await fs.writeFile(logPath, JSON.stringify(init_msg, null, 4), "utf-8");
+
+        return new Response(JSON.stringify({ result: "OK", message: "Initialization completed."}), {status: 200});
+    } catch (err) {
+        alert("Initialization failed.");
+        return new Response(JSON.stringify({ result: err, message: "init failed"}), {status: 500});
+    }
+}
+
+Init_log();
 
 /***
- * This funtin sent the msg typed in the text bax to backend API
+ * This funtion sent the msg typed in the text bax to backend API
  * and save the msg in conv_log.json
  */
 export async function POST(request) {

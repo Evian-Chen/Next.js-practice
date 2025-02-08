@@ -2,23 +2,11 @@
     "message": [
         {
             "role": "system",
-            "content": "You are a helpful assistent."
+            "content": "You're a helpful assistent"
         },
         {
             "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "user",
-            "content": "it is for testing"
+            "content": "hello"
         }
     ]
 }
