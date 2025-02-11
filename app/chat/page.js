@@ -10,12 +10,8 @@ import { useEffect, useState } from "react";
 import Form from "next/form";
 
 export default function chatPage() {
-  // get input message
-  const [input, setInput] = useState("");
-
-  // set standard message format (user, content)
+  const [input, setInput] = useState({role: "user", content: ""});
   const [messages, setMessages] = useState([]);
-
   const [paramData, setParamData] = useState({
     model:  "gpt-4o-mini",
     n: 1,
@@ -32,7 +28,7 @@ export default function chatPage() {
 
   // this return the user input message
   const sendMsg = async () => {
-    if (!input.content) {
+    if (!input) {
       alert("Can not sent empty message");
       return;
     }
@@ -50,8 +46,10 @@ export default function chatPage() {
       }
 
       const newMessage = await result.json();
-      setMessages([ ...newMessage, {role: "user", content: input}])
-      setInput(""); // make sure the text box is empty
+
+      // newMessage is not iterable, so use `[newMessage]`
+      setMessages([ ...[newMessage], {role: "user", content: input}])
+      setInput({ ...input, content: "" }); // make sure the text box is empty
       
     } catch (err) {
       console.error("fetch error: ", err);
@@ -125,7 +123,7 @@ export default function chatPage() {
             type="text"
             placeholder="Type something..."
             value={input.content}
-            onChange={(e) => setInput({ ...input, content: e.target.value })}
+            onChange={(e) => setInput({ ...input, content: e.target.value})}
             style={{ width: "100%", padding: "8px" }}
           />
           <button
