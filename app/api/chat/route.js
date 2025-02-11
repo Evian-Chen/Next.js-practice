@@ -1,8 +1,14 @@
+/**
+ * THis file should handle some backend functions and implementations
+ */
+
 import { promises as fs } from "fs";
 import path from "path";
 
 const templatePath = path.join(process.cwd(), "public", "chat", "msg_template.json");
 const logPath = path.join(process.cwd(), "public", "chat", "conv_log.json");
+const setupPath = path.join(process.cwd(), "public", "chat", "setup.json");
+const API_KEY = process.env.OPENAI_API_KEY;
 
 /**
  * This function initilize the conv_log.json when the server restarts
@@ -25,11 +31,39 @@ export async function Init_log() {
     }
 }
 
-Init_log();
+/**
+ * This function call ChatAPI to request response
+ * 1. get history conversation in json format
+ * 2. call ChatGPT API
+ * 3. add aiReply into conv_log.json
+ * 4. return AI reply in json format
+ * @returns : json format, ai reply (includes role and content)
+ */
+export async function chat() {
+    const convHistory = fs.readFile(logPath);
+    const setParam = fs.readFile(setupPath);
+
+    // get param from the frontend
+
+    // prepare input for ChatGPT API
+
+    // get reply
+    const aiReply = await fetch("https://api.openai.com/v1/chat/completions", {
+
+    })
+
+    // save reply to log
+
+    // return aiReply
+}
 
 /***
  * This funtion sent the msg typed in the text bax to backend API
  * and save the msg in conv_log.json
+ * 1. request text from the frontend
+ * 2. save msg to conv_log.json and show user text on the console
+ * 3. call chat function and get AI reply
+ * 4. show the AI reply on the console
  */
 export async function POST(request) {
     try {
@@ -52,6 +86,9 @@ export async function POST(request) {
 
         // test
         console.log("result:", result);
+
+        // get AI reply, json format
+        const aiReply = chat();
 
         // it needs response anyways, but here i need a function to handle 
         // asking reply for ChatGPT, so return a temporary Response for now
