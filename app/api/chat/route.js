@@ -2,7 +2,9 @@
  * THis file should handle some backend functions and implementations
  */
 
-import { promises as fs } from "fs";
+// export const runtime = "nodejs";
+
+// import { promises as fs } from "fs";  
 import path from "path";
 
 const templatePath = path.join(process.cwd(), "public", "chat", "msg_template.json");
@@ -18,7 +20,7 @@ export async function Init_log() {
         const init_msg = {
             "message": [{
                 "role": "system",
-                "content": "You're a helpful assistent"
+                "content": "You're a helpful assistent."
             }]
         };
     
@@ -40,17 +42,17 @@ export async function Init_log() {
  * @returns : json format, ai reply (includes role and content)
  */
 export async function chat() {
-    const convHistory = fs.readFile(logPath);
-    const setParam = fs.readFile(setupPath);
+    const convHistory = await fs.readFile(logPath, "utf-8");
+    // const setParam = await fs.readFile(setupPath, "utf-8");
 
     // get param from the frontend
 
     // prepare input for ChatGPT API
 
     // get reply
-    const aiReply = await fetch("https://api.openai.com/v1/chat/completions", {
+    // const aiReply = await fetch("https://api.openai.com/v1/chat/completions", {
 
-    })
+    // })
 
     // save reply to log
 
@@ -130,4 +132,13 @@ async function updateLog (msg) {
     } catch (err) {
         return new Response(JSON.stringify({result: "error: ", message: "invalid json data"}), {status: 500});
     }
+}
+
+/**
+ * This funciton get user param from fronted API and save it to setup.json
+ * @param {*} request 
+ * @returns 
+ */
+export async function POSTPARAM(request) {
+    return;
 }

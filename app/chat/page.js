@@ -6,12 +6,14 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from 'next/form';
 import { Init_log } from "../api/chat/route";
 
 export default function chatPage() {
-  Init_log();  // initialize conversation history
+  useEffect(() => {
+    Init_log();  // initialize conversation history
+  }, []);  // [] means only run Init_log once when load in page
 
   const [input, setInput] = useState({
     role: "user",
@@ -79,7 +81,7 @@ export default function chatPage() {
       </div>
 
       {/* setup some param */}
-      <div class="paramBox">
+      <div className="paramBox">
         <input type="number"/>
         <button typr="button" onClick={setupParam}>save</button>
       </div>

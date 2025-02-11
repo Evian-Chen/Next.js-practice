@@ -3,10 +3,6 @@
         {
             "role": "system",
             "content": "You're a helpful assistent"
-        },
-        {
-            "role": "user",
-            "content": "hello"
         }
     ]
 }
