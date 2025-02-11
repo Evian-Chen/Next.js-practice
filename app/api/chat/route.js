@@ -2,36 +2,14 @@
  * THis file should handle some backend functions and implementations
  */
 
-// export const runtime = "nodejs";
-
-// import { promises as fs } from "fs";  
 import path from "path";
+import connectDB from "@/lib/mongodb";
+import chatMessage from "@/models/chatMessage";
 
 const templatePath = path.join(process.cwd(), "public", "chat", "msg_template.json");
 const logPath = path.join(process.cwd(), "public", "chat", "conv_log.json");
 const setupPath = path.join(process.cwd(), "public", "chat", "setup.json");
 const API_KEY = process.env.OPENAI_API_KEY;
-
-/**
- * This function initilize the conv_log.json when the server restarts
- */
-export async function Init_log() {
-    try {
-        const init_msg = {
-            "message": [{
-                "role": "system",
-                "content": "You're a helpful assistent."
-            }]
-        };
-    
-        await fs.writeFile(logPath, JSON.stringify(init_msg, null, 4), "utf-8");
-
-        return new Response(JSON.stringify({ result: "OK", message: "Initialization completed."}), {status: 200});
-    } catch (err) {
-        alert("Initialization failed.");
-        return new Response(JSON.stringify({ result: err, message: "init failed"}), {status: 500});
-    }
-}
 
 /**
  * This function call ChatAPI to request response
@@ -42,7 +20,7 @@ export async function Init_log() {
  * @returns : json format, ai reply (includes role and content)
  */
 export async function chat() {
-    const convHistory = await fs.readFile(logPath, "utf-8");
+    // const convHistory = await fs.readFile(logPath, "utf-8");
     // const setParam = await fs.readFile(setupPath, "utf-8");
 
     // get param from the frontend
@@ -59,8 +37,26 @@ export async function chat() {
     // return aiReply
 }
 
+/**
+ * This funciton fetch conversation history from MongoDB and return it 
+ */
+export async function GET() {
+    await connectDB();
+
+    try {
+        // get all conversation history, in time order
+        const messages = await chatMessage.find().sort({ createdAt: 1 });
+        return new Response(JSON.stringify(messages), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        });
+    } catch (err) {
+        return new Response(JSON.stringify({error: "Failed to fetch msg from MongoDB"}), {status: 500});
+    }
+}
+
 /***
- * This funtion sent the msg typed in the text bax to backend API
+ * This funtion save msg from frontend to MongoDB Atlas
  * and save the msg in conv_log.json
  * 1. request text from the frontend
  * 2. save msg to conv_log.json and show user text on the console
@@ -68,26 +64,18 @@ export async function chat() {
  * 4. show the AI reply on the console
  */
 export async function POST(request) {
-    try {
-        const bodyMsg = await request.text();
-        const msg = JSON.parse(bodyMsg);
+    await connectDB();
 
-        // must have content
-        if (!msg.content) {
-            return new Response(JSON.stringify({result: "error", message: "content required"}), {status: 400});
+    try {
+        const { role, content } = await request.json();
+
+        if (!content) {
+            return new Response(JSON.stringify({error: "content is required"}, {status: 400}));
         }
 
-        // test, success
-        console.log("msg:", msg);
-
-        const newMsg = {
-            "role": "user",
-            "content": msg.content
-        };
-        const result = await updateLog(newMsg);  // since updateLog is async
-
-        // test
-        console.log("result:", result);
+        // create a Mongo obj and put role and content in
+        const newMessage = new chatMessage({ role, content })
+        await newMessage.save();
 
         // get AI reply, json format
         const aiReply = chat();
@@ -100,37 +88,6 @@ export async function POST(request) {
         console.error("error: ", err);
         return new Response(JSON.stringify({ result: "error", messaage: "invalid"}), {status: 400});
 
-    }
-}
-
-
-/**
- * This function update conversation history, so the history can be sent to ChatGPT API
- * to continue the conversation (so that ChatGPT can remember the content)
- * @param {*} msg : JSON, the text user typed in the text box that can inputted into ChatGPT API
- * @returns : result of updating conv_log.json
- */
-async function updateLog (msg) {
-    try{
-        const history = await fs.readFile(logPath);
-        const jsonHistory = JSON.parse(history);
-
-        // test
-        console.log("jsonHistory: ", jsonHistory);
-
-        jsonHistory.message.push({
-            "role": "user",
-            "content": msg.content
-        });
-
-        await fs.writeFile(logPath, JSON.stringify(jsonHistory, null, 4), "utf-8");
-
-        return new Response(JSON.stringify({result: "OK", message: "msg saved!"}), {
-            status: 200,
-            headers: {"content-type": "application/json"}
-        });
-    } catch (err) {
-        return new Response(JSON.stringify({result: "error: ", message: "invalid json data"}), {status: 500});
     }
 }
 
