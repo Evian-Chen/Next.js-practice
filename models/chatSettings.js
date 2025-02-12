@@ -16,9 +16,8 @@ const setupSchema = new mongoose.Schema({
     stream: { type: Boolean, required: false },
     logit_bias: { type: null, required: false },
     stop: { type: null, required: false },
-
 }, {timestamps: true});
 
-const setupParams = mongoose.models.setupParams || mongoose.model("setupParams", setupSchema);
+const chatSettings = mongoose.models.chatSettings || mongoose.model("chatSettings", setupSchema);
 
-export default setupParams;
+export default chatSettings;

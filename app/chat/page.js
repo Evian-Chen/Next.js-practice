@@ -7,7 +7,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Form from "next/form";
 
 export default function chatPage() {
   const [input, setInput] = useState({
@@ -22,12 +21,12 @@ export default function chatPage() {
   });
 
   // Get conversation history as long as chat page load in
-  useEffect(() => {
-    fetch("/api/chat") // sent GET request to backend api
-      .then((res) => res.json()) // turn api response to json format
-      .then((data) => setMessages(data)) // update messages status
-      .catch((err) => console.log("Fetch error: ", err));
-  }, []); // only run once
+  // useEffect(() => {
+  //   fetch("/api/chat/history") // sent GET request to backend api
+  //     .then((res) => res.json()) // turn api response to json format
+  //     .then((data) => setMessages(data)) // update messages status
+  //     .catch((err) => console.log("Fetch error: ", err));
+  // }, []); // only run once
 
   // this return the user input message
   const sendMsg = async () => {
@@ -37,7 +36,7 @@ export default function chatPage() {
     }
 
     try {
-      const result = await fetch("/api/chat", {
+      const result = await fetch("/api/chat/send", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(input),
@@ -63,13 +62,13 @@ export default function chatPage() {
   // this check if the user change the param setup
   const setupParam = async () => {
     if (!paramData) {
-      alert("Make sure to fill all the blank.")
+      alert("Make sure to fill all the fields.")
       return;
     }
 
     try {
-      const result = await fetch("/api/chat", {
-        method: "POSTPARAM",
+      const result = await fetch("/api/chat/settings", {
+        method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(paramData)
       });
@@ -80,10 +79,8 @@ export default function chatPage() {
         return;
       }
 
-      const newParams =  result.json()
-      console.log("newParams server response: ", newParams);
-      
-      setParamData( ...[newParams]);
+      const newParams =  await result.json()
+      setParamData(newParams);
 
     } catch (err) {
       console.error("Fetch error: ", err);

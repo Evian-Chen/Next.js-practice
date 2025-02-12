@@ -17,28 +17,6 @@ export default function Home() {
       gap: "12px" 
     }}>
 
-      <h2>/info</h2>
-      <p>Enter personal info in /info page</p>
-      <p>This is a test page of infomation transportation.</p>
-      <Link href="/info">
-        <button style={{
-          backgroundColor: "green",
-          color: "white",
-          padding: "8px 16px",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer"
-        }}>Go to /info page</button>
-      </Link>
-      
-      <hr style={{ width: "80%", borderColor: "gray" }} />
-
-      {/* Test search form */}
-      <Form action="/search">
-          <input name="query" />
-          <button type="submit">Submit</button>
-      </Form>
-
       <h2>/chat</h2>
       <p>ChatGPT API</p>
       <Link href="/chat">
@@ -51,6 +29,8 @@ export default function Home() {
           cursor: "pointer"
         }}>Go to /chat page</button>
       </Link>
+
+      <hr style={{ width: "80%", borderColor: "gray" }} />
     </div>
   );
 }
