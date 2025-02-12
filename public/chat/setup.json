@@ -1,6 +1,13 @@
 {
     "model": "gpt-4o-mini",
     "message": [],
+    "temperature": 1,
+    "top_p": 1,
     "n": 1,
-    "max_tokens": 20
+    "stream": false,
+    "stop": null,
+    "max_tokens": 20,
+    "presence_penalty": 0,
+    "frequency_penalty": 0,
+    "logit_bias": null
 }

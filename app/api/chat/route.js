@@ -12,16 +12,16 @@ const setupPath = path.join(process.cwd(), "public", "chat", "setup.json");
 const API_KEY = process.env.OPENAI_API_KEY;
 
 /**
- * This function call ChatAPI to request response
+ *  * This function call ChatAPI to request response
  * 1. get history conversation in json format
  * 2. call ChatGPT API
  * 3. add aiReply into conv_log.json
  * 4. return AI reply in json format
+ * @param {*} params : model setup params in json format
  * @returns : json format, ai reply (includes role and content)
  */
-export async function chat() {
-    // const convHistory = await fs.readFile(logPath, "utf-8");
-    // const setParam = await fs.readFile(setupPath, "utf-8");
+export async function chat(params) {
+    // connect to MongoDB to get conversation history
 
     // get param from the frontend
 
@@ -40,7 +40,7 @@ export async function chat() {
 /**
  * This funciton fetch conversation history from MongoDB and return it 
  */
-export async function GET() {
+export async function getHistory() {
     await connectDB();
 
     try {
@@ -77,8 +77,11 @@ export async function POST(request) {
         const newMessage = new chatMessage({ role, content })
         await newMessage.save();
 
+        // get current model setup
+        const params = POSTPARAM();
+
         // get AI reply, json format
-        const aiReply = chat();
+        const aiReply = chat(params);
 
         // it needs response anyways, but here i need a function to handle 
         // asking reply for ChatGPT, so return a temporary Response for now
@@ -94,8 +97,13 @@ export async function POST(request) {
 /**
  * This funciton get user param from fronted API and save it to setup.json
  * @param {*} request 
- * @returns 
+ * @returns : paramData in json format
  */
 export async function POSTPARAM(request) {
+    const newParams = await request.json();
+
+    // test, it should be the paramsData in json format
+    console.log(newParams);
+
     return;
 }

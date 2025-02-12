@@ -4,11 +4,14 @@ This is a practice project using Next.js with API routes and client-side fetchin
 ## Workflow
 This project follows the steps below.
 
-### 1 Enviroment setup
+### 1. Enviroment setup
 To create a project and set up everything automaticall: 
 ```bash
 npx create-next-app@latest
 ```
+
+### 2. MongoDB setup
+Put every Schema in /models
 
 ## Installation and Setup
 Follow the instructinos to run locally.

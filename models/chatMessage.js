@@ -1,5 +1,5 @@
 /**
- * This file is to define data structure.
+ * This file is to define message schema.
  */
 
 import mongoose from "mongoose";

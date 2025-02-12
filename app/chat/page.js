@@ -10,7 +10,10 @@ import { useEffect, useState } from "react";
 import Form from "next/form";
 
 export default function chatPage() {
-  const [input, setInput] = useState({role: "user", content: ""});
+  const [input, setInput] = useState({
+    role: "user", 
+    content: ""
+  });
   const [messages, setMessages] = useState([]);
   const [paramData, setParamData] = useState({
     model:  "gpt-4o-mini",
@@ -59,8 +62,34 @@ export default function chatPage() {
 
   // this check if the user change the param setup
   const setupParam = async () => {
-    return;
-  };
+    if (!paramData) {
+      alert("Make sure to fill all the blank.")
+      return;
+    }
+
+    try {
+      const result = await fetch("/api/chat", {
+        method: "POSTPARAM",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(paramData)
+      });
+
+      if (!result.ok) {
+        alert("Failed to update param");
+        console.log("result: ", result);
+        return;
+      }
+
+      const newParams =  result.json()
+      console.log("newParams server response: ", newParams);
+      
+      setParamData( ...[newParams]);
+
+    } catch (err) {
+      console.error("Fetch error: ", err);
+      alert("Fetch error");
+    }
+  }
 
   return (
     <div className="chat-container">
