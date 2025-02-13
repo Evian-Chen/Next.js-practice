@@ -6,12 +6,12 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function chatPage() {
   const [input, setInput] = useState({
-    role: "user", 
-    content: ""
+    role: "user",
+    content: "",
   });
   const [messages, setMessages] = useState([]);
   const [paramData, setParamData] = useState({
@@ -24,8 +24,10 @@ export default function chatPage() {
     frequency_penalty: 0,
     stream: false,
     logit_bias: null,
-    stop: null
-});
+    stop: null,
+  });
+  const [isSaved, setIsSaved] = useState(false);
+  const isManualChange = useRef(false);
 
   // Get conversation history as long as chat page load in
   // useEffect(() => {
@@ -34,6 +36,13 @@ export default function chatPage() {
   //     .then((data) => setMessages(data)) // update messages status
   //     .catch((err) => console.log("Fetch error: ", err));
   // }, []); // only run once
+
+  // Listen paramData
+  useEffect(() => {
+    if (isManualChange.current){
+      setIsSaved(false);
+    }
+  }, [paramData]); // if paramData is change, run setIsSaved
 
   // this return the user input message
   const sendMsg = async () => {
@@ -60,10 +69,9 @@ export default function chatPage() {
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: "user", content: input.content },
-        newMessage
+        newMessage,
       ]);
       setInput({ ...input, content: "" }); // make sure the text box is empty
-      
     } catch (err) {
       console.error("fetch error: ", err);
       alert("Fetch error.");
@@ -73,7 +81,7 @@ export default function chatPage() {
   // this check if the user change the param setup
   const setupParam = async () => {
     if (!paramData) {
-      alert("Make sure to fill all the fields.")
+      alert("Make sure to fill all the fields.");
       return;
     }
 
@@ -81,7 +89,7 @@ export default function chatPage() {
       const result = await fetch("/api/settings", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(paramData)
+        body: JSON.stringify(paramData),
       });
 
       if (!result.ok) {
@@ -90,17 +98,28 @@ export default function chatPage() {
         return;
       }
 
-      const newParams =  await result.json()
-      setParamData(prev => ({
-        ...prev,  
-        ...newParams 
+      const newParams = await result.json();
+
+      isManualChange.current = false;
+      setParamData((prev) => ({
+        ...prev,
+        ...newParams,
       }));
+
+      // isManualChange.corrent = false;
+
+      // settings saved successfully
+      setIsSaved(true);
+
+      setTimeout(() => {
+        isManualChange.current = true;
+      }, 10);
 
     } catch (err) {
       console.error("Fetch error: ", err);
       alert("Fetch error");
     }
-  }
+  };
 
   return (
     <div className="chat-container">
@@ -108,7 +127,6 @@ export default function chatPage() {
       <p>Type something in the text box to chat with ChatGPT</p>
 
       <div className="layout-container">
-
         {/* left panel, params setting */}
         <div className="param-box">
           <h3>ChatGPT Settings</h3>
@@ -134,7 +152,9 @@ export default function chatPage() {
             <input
               type="number"
               value={paramData.n}
-              onChange={(e) => setParamData({ ...paramData, n: Number(e.target.value) })}
+              onChange={(e) =>
+                setParamData({ ...paramData, n: Number(e.target.value) })
+              }
               style={{ padding: "5px", marginLeft: "10px", width: "100%" }}
             />
           </div>
@@ -145,15 +165,23 @@ export default function chatPage() {
             <input
               type="number"
               value={paramData.max_tokens}
-              onChange={(e) => setParamData({ ...paramData, max_tokens: Number(e.target.value) })}
+              onChange={(e) =>
+                setParamData({
+                  ...paramData,
+                  max_tokens: Number(e.target.value),
+                })
+              }
               style={{ padding: "5px", marginLeft: "10px", width: "100%" }}
             />
           </div>
 
-          <button type="button" onClick={setupParam} style={{ padding: "8px 12px", marginTop: "10px", width: "100%" }}>
-            Save Settings
+          <button
+            type="button"
+            onClick={setupParam}
+            className={`param-button ${isSaved ? "saved" : "unSaved"}`}
+          >
+            {isSaved ? "Setting Saved" : "Save Settings"}
           </button>
-
         </div>
 
         {/* right panel, message input box */}
@@ -163,7 +191,7 @@ export default function chatPage() {
             type="text"
             placeholder="Type something..."
             value={input.content || ""}
-            onChange={(e) => setInput({ ...input, content: e.target.value})}
+            onChange={(e) => setInput({ ...input, content: e.target.value })}
             style={{ width: "100%", padding: "8px" }}
           />
           <button

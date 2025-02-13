@@ -15,11 +15,12 @@ export async function POST(request) {
     const userParams = await request.json();
     const dbParams = await getParams();
 
-    console.log("user params: ", userParams);
-    console.log("db params: ", dbParams);
+    // console.log("user params: ", userParams);
+    // console.log("db params: ", dbParams);
 
     const newSettings = new chatSettings(userParams);
     await newSettings.save();
+    console.log("setting saved successfully");
 
     return new Response(
       JSON.stringify({ result: "ok", message: "settings saved" }),

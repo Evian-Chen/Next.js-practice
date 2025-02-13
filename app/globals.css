@@ -70,6 +70,21 @@ a {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.param-button {
+  padding: 8px 12px;
+  margin-top: 10px;
+  width: 100%;
+  border-color: #0a0a0a;
+}
+
+.saved {
+  background-color: greenyellow;
+}
+
+.unSaved {
+  background-color: red;
+}
+
 .layout-container {
   display: flex;
   width: 80%;
