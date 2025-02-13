@@ -7,6 +7,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import styles from "../styles/chat.module.css";
 
 export default function chatPage() {
   const [input, setInput] = useState({
@@ -106,8 +107,6 @@ export default function chatPage() {
         ...newParams,
       }));
 
-      // isManualChange.corrent = false;
-
       // settings saved successfully
       setIsSaved(true);
 
@@ -122,13 +121,13 @@ export default function chatPage() {
   };
 
   return (
-    <div className="chat-container">
+    <div className={styles.chatContainer}>
       <h2>Welcome to ChatGPT API</h2>
       <p>Type something in the text box to chat with ChatGPT</p>
 
-      <div className="layout-container">
+      <div className={styles.layoutContainer}>
         {/* left panel, params setting */}
-        <div className="param-box">
+        <div className="styles.paramBox">
           <h3>ChatGPT Settings</h3>
 
           {/* model selector */}
@@ -185,7 +184,7 @@ export default function chatPage() {
         </div>
 
         {/* right panel, message input box */}
-        <div className="chat-box">
+        <div className={styles.chatBox}>
           <h3>Chat</h3>
           <input
             type="text"

@@ -1,0 +1,11 @@
+/* Root Page Styles */
+
+.container {
+    display: flex;
+    text-align: center; 
+    flex-direction: column;
+    justify-content: center;  /* vertical */
+    align-items: center;      /* horizontal */
+    height: 100vh;
+    gap: 10px;
+}
