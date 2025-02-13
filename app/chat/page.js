@@ -15,14 +15,21 @@ export default function chatPage() {
   });
   const [messages, setMessages] = useState([]);
   const [paramData, setParamData] = useState({
-    model:  "gpt-4o-mini",
+    model: "gpt-4o-mini",
     n: 1,
-    max_tokens: 10,
-  });
+    max_tokens: 100,
+    temperature: 0.7,
+    top_p: 1,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+    stream: false,
+    logit_bias: null,
+    stop: null
+});
 
   // Get conversation history as long as chat page load in
   // useEffect(() => {
-  //   fetch("/api/chat/history") // sent GET request to backend api
+  //   fetch("/api/history") // sent GET request to backend api
   //     .then((res) => res.json()) // turn api response to json format
   //     .then((data) => setMessages(data)) // update messages status
   //     .catch((err) => console.log("Fetch error: ", err));
@@ -36,7 +43,7 @@ export default function chatPage() {
     }
 
     try {
-      const result = await fetch("/api/chat/send", {
+      const result = await fetch("/api/send", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(input),
@@ -50,7 +57,11 @@ export default function chatPage() {
       const newMessage = await result.json();
 
       // newMessage is not iterable, so use `[newMessage]`
-      setMessages([ ...[newMessage], {role: "user", content: input}])
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "user", content: input.content },
+        newMessage
+      ]);
       setInput({ ...input, content: "" }); // make sure the text box is empty
       
     } catch (err) {
@@ -67,7 +78,7 @@ export default function chatPage() {
     }
 
     try {
-      const result = await fetch("/api/chat/settings", {
+      const result = await fetch("/api/settings", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(paramData)
@@ -80,7 +91,10 @@ export default function chatPage() {
       }
 
       const newParams =  await result.json()
-      setParamData(newParams);
+      setParamData(prev => ({
+        ...prev,  
+        ...newParams 
+      }));
 
     } catch (err) {
       console.error("Fetch error: ", err);
@@ -148,7 +162,7 @@ export default function chatPage() {
           <input
             type="text"
             placeholder="Type something..."
-            value={input.content}
+            value={input.content || ""}
             onChange={(e) => setInput({ ...input, content: e.target.value})}
             style={{ width: "100%", padding: "8px" }}
           />
