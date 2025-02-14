@@ -40,7 +40,7 @@ export default function chatPage() {
 
   // Listen paramData
   useEffect(() => {
-    if (isManualChange.current){
+    if (isManualChange.current) {
       setIsSaved(false);
     }
   }, [paramData]); // if paramData is change, run setIsSaved
@@ -113,7 +113,6 @@ export default function chatPage() {
       setTimeout(() => {
         isManualChange.current = true;
       }, 10);
-
     } catch (err) {
       console.error("Fetch error: ", err);
       alert("Fetch error");
@@ -122,45 +121,39 @@ export default function chatPage() {
 
   return (
     <div className={styles.chatContainer}>
-      <h2>Welcome to ChatGPT API</h2>
-      <p>Type something in the text box to chat with ChatGPT</p>
+      <div className={styles.left}>
+        <h2>Welcome to ChatGPT API</h2>
+        {/* <p>Type something in the text box to chat with ChatGPT</p> */}
 
-      <div className={styles.layoutContainer}>
-        {/* left panel, params setting */}
-        <div className="styles.paramBox">
-          <h3>ChatGPT Settings</h3>
+        <div className={styles.settingsContainer}>
+          <h4>ChatGPT Settings</h4>
 
-          {/* model selector */}
-          <div style={{ marginBottom: "10px" }}>
-            <label>Model: </label>
+          {/* left panel, params setting */}
+          <div className={styles.paramBox}>
+            {/* model selector */}
+            <label>Model</label>
             <select
               value={paramData.model}
               onChange={(e) =>
                 setParamData({ ...paramData, model: e.target.value })
               }
-              style={{ padding: "5px", marginLeft: "10px", width: "100%" }}
             >
               <option value="gpt-4o-mini">gpt-4o-mini</option>
               <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
             </select>
-          </div>
 
-          {/* n reply */}
-          <div style={{ marginBottom: "10px" }}>
-            <label>n (Responses): </label>
+            {/* n reply */}
+            <label>n Responses</label>
             <input
               type="number"
               value={paramData.n}
               onChange={(e) =>
                 setParamData({ ...paramData, n: Number(e.target.value) })
               }
-              style={{ padding: "5px", marginLeft: "10px", width: "100%" }}
             />
-          </div>
 
-          {/* max tokens */}
-          <div style={{ marginBottom: "10px" }}>
-            <label>Max Tokens: </label>
+            {/* max tokens */}
+            <label>Max Tokens</label>
             <input
               type="number"
               value={paramData.max_tokens}
@@ -170,37 +163,36 @@ export default function chatPage() {
                   max_tokens: Number(e.target.value),
                 })
               }
-              style={{ padding: "5px", marginLeft: "10px", width: "100%" }}
             />
+
+            <button
+              type="button"
+              onClick={setupParam}
+              className={styles.paramButton}
+            >
+              {isSaved ? "Setting Saved" : "Save Settings"}
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={setupParam}
-            className={`param-button ${isSaved ? "saved" : "unSaved"}`}
-          >
-            {isSaved ? "Setting Saved" : "Save Settings"}
-          </button>
         </div>
+      </div>
 
-        {/* right panel, message input box */}
-        <div className={styles.chatBox}>
-          <h3>Chat</h3>
-          <input
-            type="text"
-            placeholder="Type something..."
-            value={input.content || ""}
-            onChange={(e) => setInput({ ...input, content: e.target.value })}
-            style={{ width: "100%", padding: "8px" }}
-          />
-          <button
-            type="button"
-            onClick={sendMsg}
-            style={{ padding: "8px 12px", width: "100%" }}
-          >
-            Send
-          </button>
-        </div>
+      {/* right panel, message input box */}
+      <div className={styles.chatBox}>
+        {/* <h3>Chat</h3> */}
+        <input
+          type="text"
+          placeholder="Type something..."
+          value={input.content || ""}
+          onChange={(e) => setInput({ ...input, content: e.target.value })}
+          className="textBar"
+        />
+        <button
+          type="button"
+          onClick={sendMsg}
+          style={{ padding: "8px 12px", width: "100%" }}
+        >
+          Send
+        </button>
       </div>
     </div>
   );
