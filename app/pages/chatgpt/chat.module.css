@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   width: 30%;
 }
 
@@ -43,7 +43,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 6px;
-  margin: 15px;
+  margin-inline: 15px;
+  margin-top: 5px;
 }
 
 .paramButton {
@@ -64,6 +65,16 @@
 }
 
 .paramButton:hover {opacity: 1}
+
+.tokens {
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 12px;
+  text-align: center;
+  left: 20px;
+  font-size: 10px;
+  margin-inline: 15px;
+}
 
 .chatBox {
   width: 55%;

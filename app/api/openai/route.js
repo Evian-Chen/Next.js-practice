@@ -7,6 +7,7 @@ import { connectDB } from "@/lib/mongodb";
 import { OpenAI } from "openai";
 import chatMessage from "@/models/chatMessage";
 import chatSettings from "@/models/chatSettings";
+import tokenInfo from "@/models/tokenInfo";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -53,12 +54,26 @@ export async function POST(request) {
       role: aiReply.choices[0].message.role,
       content: aiReply.choices[0].message.content,
     });
-
     await aiMsg.save();
 
-    const test = await chatMessage.find();
-    console.log(test);
+    console.log("ai reply:");
+    console.log(aiReply);
 
+    // overwrite the current tokens information
+    const tokens = await tokenInfo.findOneAndUpdate(
+      {},  // no condition
+      {
+        prompt: aiReply.usage.prompt_tokens,
+        completion: aiReply.usage.completion_tokens,
+        total: aiReply.usage.total_tokens,
+      },
+      {
+        new:true, upsert: true
+      }
+    );
+
+    console.log("updated tokens:");
+    console.log(aiReply.choices[0].message);
 
     return new Response(
       JSON.stringify({ result: "ok", message: "msg saved" }),
@@ -69,6 +84,35 @@ export async function POST(request) {
     return new Response(
       JSON.stringify({ result: "error", messaage: "invalid" }),
       { status: 400 }
+    );
+  }
+}
+
+export async function GET() {
+  await connectDB();
+
+  try {
+    let tokenData = await tokenInfo.findOne();
+
+    if (!tokenData) {
+      tokenData = new tokenInfo({
+        prompt: 0,
+        completion: 0,
+        total: 0,
+      });
+
+      await tokenData.save();
+    }
+
+    return new Response(JSON.stringify(tokenData), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error("Fetch token data error:", err);
+    return new Response(
+      JSON.stringify({ error: "Failed to fetch token data" }),
+      { status: 500 }
     );
   }
 }

@@ -3,7 +3,6 @@
  * This file update the model setup for a single time conversation
  */
 
-import { connectDB } from "@/lib/mongodb";
 import chatSettings from "@/models/chatSettings";
 
 export async function POST(request) {
@@ -31,18 +30,5 @@ export async function POST(request) {
       JSON.stringify({ error: "Failed to update settings" }),
       { status: 500 }
     );
-  }
-}
-
-export async function getParams() {
-  await connectDB();
-  console.log("connected to MongoDB.")
-
-  try {
-    const dbParams = await chatSettings.findOne().sort({ createdAt: -1 });
-    return dbParams;
-  } catch (err) {
-    console.error("Fetch DB params error: ", err);
-    return null;
   }
 }

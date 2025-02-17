@@ -18,7 +18,7 @@ export default function chatPage() {
   const [paramData, setParamData] = useState({
     model: "gpt-4o-mini",
     n: 1,
-    max_tokens: 100,
+    max_tokens: 50,
     temperature: 0.7,
     top_p: 1,
     presence_penalty: 0,
@@ -27,16 +27,20 @@ export default function chatPage() {
     logit_bias: null,
     stop: null,
   });
+  const [tokenInfo, setTokenInfo] = useState({
+    prompt: 0,
+    completion: 0,
+    total: 0,
+  });
   const [isSaved, setIsSaved] = useState(false);
   const isManualChange = useRef(false);
 
-  // Get conversation history as long as chat page load in
-  // useEffect(() => {
-  //   fetch("/api/history") // sent GET request to backend api
-  //     .then((res) => res.json()) // turn api response to json format
-  //     .then((data) => setMessages(data)) // update messages status
-  //     .catch((err) => console.log("Fetch error: ", err));
-  // }, []); // only run once
+  useEffect(() => {
+    fetch("/api/openai")
+      .then((res) => res.json())
+      .then((data) => setTokenInfo(data))
+      .catch((err) => console.error("err", err));
+  }, [messages]);
 
   // Listen paramData
   useEffect(() => {
@@ -73,6 +77,12 @@ export default function chatPage() {
         newMessage,
       ]);
       setInput({ ...input, content: "" }); // make sure the text box is empty
+
+      fetch("/api/openai")
+      .then((res) => res.json())
+      .then((data) => setTokenInfo(data))
+      .catch((err) => console.error("Error fetching token info:", err));
+      
     } catch (err) {
       console.error("fetch error: ", err);
       alert("Fetch error.");
@@ -173,6 +183,12 @@ export default function chatPage() {
               {isSaved ? "Setting Saved" : "Save Settings"}
             </button>
           </div>
+        </div>
+
+        <div className={styles.tokens}>
+          <p>prompt tokens: {tokenInfo.prompt}</p>
+          <p>completion tokens: {tokenInfo.completion}</p>
+          <p>total tokens: {tokenInfo.total}</p>
         </div>
       </div>
 
