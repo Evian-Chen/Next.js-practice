@@ -1,11 +1,45 @@
 /* Root Page Styles */
 
 .container {
-    display: flex;
-    text-align: center; 
-    flex-direction: column;
-    justify-content: center;  /* vertical */
-    align-items: center;      /* horizontal */
-    height: 100vh;
-    gap: 10px;
+  display: flex;
+  text-align: center;
+  flex-direction: row;
+  justify-content: center; /* vertical */
+  align-items: center; /* horizontal */
+  height: 100vh;
+  gap: 30px;
+}
+
+.selectModel {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  gap: 10px;
+}
+
+.selectBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.gpt {
+  background-color: lightblue;
+  color: black;
+}
+
+.gemini {
+  background-color: darkseagreen;
+  color: black;
+}
+
+.perplexity {
+  background-color: bisque;
+  color: black;
+}
+
+.vl {
+  border-left: 6px solid rgb(199, 255, 199);
+  height: 50px;
 }
