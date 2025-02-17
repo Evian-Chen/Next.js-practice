@@ -53,7 +53,7 @@ export default function chatPage() {
     }
 
     try {
-      const result = await fetch("/api/send", {
+      const result = await fetch("/api/openai", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(input),

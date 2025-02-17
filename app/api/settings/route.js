@@ -13,10 +13,6 @@ export async function POST(request) {
      * params need to be processed
      */
     const userParams = await request.json();
-    const dbParams = await getParams();
-
-    // console.log("user params: ", userParams);
-    // console.log("db params: ", dbParams);
 
     const newSettings = new chatSettings(userParams);
     await newSettings.save();

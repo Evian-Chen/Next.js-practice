@@ -1,4 +1,74 @@
 /**
- * This file get all history ans newest settings from DB
- * then send request to the ChatGPT API to get new reply
+ * /send/route.js
+ * This file get user message input and save it to MongoDB
  */
+
+import { connectDB } from "@/lib/mongodb";
+import { OpenAI } from "openai";
+import chatMessage from "@/models/chatMessage";
+import chatSettings from "@/models/chatSettings";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+/***
+ * This funtion save msg from frontend to MongoDB Atlas and save the in DB
+ */
+export async function POST(request) {
+  console.log("send POST function received.");
+  await connectDB();
+
+  try {
+    const { role, content } = await request.json();
+
+    if (!content) {
+      return new Response(
+        JSON.stringify({ error: "content is required" }, { status: 400 })
+      );
+    }
+
+    // create a Mongo obj and put role and content in
+    const newMessage = new chatMessage({ role, content });
+    await newMessage.save();
+
+    // get history message from MongoDB
+    const history = await chatMessage.find();
+    const historyMsg = history.map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+
+    // get history setting
+    const newSetting = await chatSettings.findOne().sort({ createdAt: -1 });
+
+    // newSetting is mongoose, not an object
+    const settingsObj = newSetting.toObject();
+    const { _id, createdAt, updatedAt, __v, ...settings } = settingsObj;
+    const gptInput = { ...settings, messages: historyMsg };
+
+    const aiReply = await openai.chat.completions.create(gptInput);
+
+    const aiMsg = new chatMessage({
+      role: aiReply.choices[0].message.role,
+      content: aiReply.choices[0].message.content,
+    });
+
+    await aiMsg.save();
+
+    const test = await chatMessage.find();
+    console.log(test);
+
+
+    return new Response(
+      JSON.stringify({ result: "ok", message: "msg saved" }),
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("error: ", err);
+    return new Response(
+      JSON.stringify({ result: "error", messaage: "invalid" }),
+      { status: 400 }
+    );
+  }
+}
