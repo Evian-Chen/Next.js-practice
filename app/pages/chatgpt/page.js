@@ -7,7 +7,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import styles from "../styles/chat.module.css";
+import styles from "./chat.module.css";
 
 export default function chatPage() {
   const [input, setInput] = useState({
@@ -176,23 +176,21 @@ export default function chatPage() {
         </div>
       </div>
 
-      {/* right panel, message input box */}
-      <div className={styles.chatBox}>
-        {/* <h3>Chat</h3> */}
-        <input
-          type="text"
-          placeholder="Type something..."
-          value={input.content || ""}
-          onChange={(e) => setInput({ ...input, content: e.target.value })}
-          className="textBar"
-        />
-        <button
-          type="button"
-          onClick={sendMsg}
-          style={{ padding: "8px 12px", width: "100%" }}
-        >
-          Send
-        </button>
+      <div className={styles.right}>
+        {/* right panel, message input box */}
+        <div className={styles.chatBox}>
+          {/* <h3>Chat</h3> */}
+          <input
+            type="text"
+            placeholder="Type something..."
+            value={input.content || ""}
+            onChange={(e) => setInput({ ...input, content: e.target.value })}
+            className={styles.textBar}
+          />
+          <button type="button" onClick={sendMsg} className={styles.send}>
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );

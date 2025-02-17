@@ -7,7 +7,7 @@ export default function Home() {
       <div className={styles.selectModel}>
         <h2>Chat with ChatGPT</h2>
         <p>ChatGPT API</p>
-        <Link href="/chatgpt">
+        <Link href="/pages/chatgpt">
           <button className={`${styles.selectBtn} ${styles.gpt}`}>Go to /chatgpt page</button>
         </Link>
       </div>
@@ -17,7 +17,7 @@ export default function Home() {
       <div className={styles.selectModel}>
         <h2>Chat with Gimini</h2>
         <p>Gemini API</p>
-        <Link href="/gemini">
+        <Link href="/pages/gemini">
           <button className={`${styles.selectBtn} ${styles.gimini}`}>Go to /gemini page</button>
         </Link>
       </div>
@@ -27,7 +27,7 @@ export default function Home() {
       <div className={styles.selectModel}>
         <h2>Chat with Perplexity</h2>
         <p>Perplexity API</p>
-        <Link href="/perplexity">
+        <Link href="/pages/perplexity">
           <button className={`${styles.selectBtn} ${styles.perplexity}`}>
             Go to /perplexity page
           </button>
