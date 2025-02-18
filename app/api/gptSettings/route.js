@@ -3,7 +3,7 @@
  * This file update the model setup for a single time conversation
  */
 
-import chatSettings from "@/models/chatSettings";
+import chatSettings from "@/models/chatgpt/chatSettings";
 
 export async function POST(request) {
   try {

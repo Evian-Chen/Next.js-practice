@@ -97,7 +97,7 @@ export default function chatPage() {
     }
 
     try {
-      const result = await fetch("/api/settings", {
+      const result = await fetch("/api/gptSettings", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(paramData),

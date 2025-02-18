@@ -5,9 +5,9 @@
 
 import { connectDB } from "@/lib/mongodb";
 import { OpenAI } from "openai";
-import chatMessage from "@/models/chatMessage";
-import chatSettings from "@/models/chatSettings";
-import tokenInfo from "@/models/tokenInfo";
+import chatMessage from "@/models/chatgpt/chatMessage";
+import chatSettings from "@/models/chatgpt/chatSettings";
+import tokenInfo from "@/models/chatgpt/tokenInfo";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
