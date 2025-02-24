@@ -3,14 +3,14 @@
  * This file update the model setup for a single time conversation
  */
 
-import { chatSettingsSchema } from "@/models/chatgpt/chatSettings";
+import chatSettingsSchema from "@/models/chatgpt/chatSettings";
 import { connectDB } from "@/lib/mongodb";
 
 export async function POST(request) {
   try {
     // connect to correct database
     const db = await connectDB("chatgpt");
-    const chatsettings = db.model("chatsettings", chatSettingsSchema);
+    const chatsettings = db.models.chatSettings || db.model("chatSettings", chatSettingsSchema);
 
     const userParams = await request.json();
 

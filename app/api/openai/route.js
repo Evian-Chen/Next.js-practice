@@ -5,20 +5,30 @@
 
 import { connectDB } from "@/lib/mongodb";
 import { OpenAI } from "openai";
-import chatMessage from "@/models/chatgpt/chatMessage";
-import chatSettings from "@/models/chatgpt/chatSettings";
-import tokenInfo from "@/models/chatgpt/tokenInfo";
+import chatMessageSchema from "@/models/chatgpt/chatMessage";
+import chatSettingsSchema from "@/models/chatgpt/chatSettings";
+import tokenInfoSchema from "@/models/chatgpt/tokenInfo";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+const db = await connectDB("chatgpt");
+
+// setup all chatgpt db collections' connections
+const ChatMessage =
+  db.models.chatMessage || db.model("chatMessage", chatMessageSchema);
+const ChatSettings =
+  db.models.chatSettings || db.model("chatSettings", chatSettingsSchema);
+const TokenInfo =
+  db.models.tokenInfo || db.model("tokenInfo", tokenInfoSchema);
 
 /***
  * This funtion save msg from frontend to MongoDB Atlas and save the in DB
  */
 export async function POST(request) {
   console.log("send POST function received.");
-  await connectDB("chatgpt");
+
 
   try {
     const { role, content } = await request.json();
@@ -30,18 +40,18 @@ export async function POST(request) {
     }
 
     // create a Mongo obj and put role and content in
-    const newMessage = new chatMessage({ role, content });
+    const newMessage = new ChatMessage({ role, content });
     await newMessage.save();
 
     // get history message from MongoDB
-    const history = await chatMessage.find();
+    const history = await ChatMessage.find();
     const historyMsg = history.map((msg) => ({
       role: msg.role,
       content: msg.content,
     }));
 
     // get history setting
-    const newSetting = await chatSettings.findOne().sort({ createdAt: -1 });
+    const newSetting = await ChatSettings.findOne().sort({ createdAt: -1 });
 
     // newSetting is mongoose, not an object
     const settingsObj = newSetting.toObject();
@@ -50,7 +60,7 @@ export async function POST(request) {
 
     const aiReply = await openai.chat.completions.create(gptInput);
 
-    const aiMsg = new chatMessage({
+    const aiMsg = new ChatMessage({
       role: aiReply.choices[0].message.role,
       content: aiReply.choices[0].message.content,
     });
@@ -60,15 +70,16 @@ export async function POST(request) {
     console.log(aiReply);
 
     // overwrite the current tokens information
-    const tokens = await tokenInfo.findOneAndUpdate(
-      {},  // find the first data
+    const tokens = await TokenInfo.findOneAndUpdate(
+      {}, // find the first data
       {
         prompt: aiReply.usage.prompt_tokens,
         completion: aiReply.usage.completion_tokens,
         total: aiReply.usage.total_tokens,
       },
       {
-        new:true, upsert: true
+        new: true,
+        upsert: true,
       }
     );
 
@@ -89,13 +100,12 @@ export async function POST(request) {
 }
 
 export async function GET() {
-  await connectDB("chatgpt");
 
   try {
-    let tokenData = await tokenInfo.findOne();
+    let tokenData = await TokenInfo.findOne();
 
     if (!tokenData) {
-      tokenData = new tokenInfo({
+      tokenData = new TokenInfo({
         prompt: 0,
         completion: 0,
         total: 0,
