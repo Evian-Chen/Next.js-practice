@@ -1,36 +1,27 @@
 # nextJS-practice
-This is a practice project using Next.js with API routes and client-side fetching.
+This is a practice project using Next.js to build a customized ChatGPT user interface.
 
-## Workflow
-This project follows the steps below.
+## Getting Started
+To run this project locally, follow these steps:
 
-### 1. Enviroment setup
-To create a project and set up everything automaticall: 
+### 1. Clone the Repository
 ```bash
-npx create-next-app@latest
+git clone https://github.com/Evian-Chen/Next.js-practice.git
+cd nextjs-test
 ```
 
-### 2. MongoDB setup
-Put every Schema in /models
+### 2. Set Up Enviroment Variables
+Create a .env file in the root directory. Apply for a ChatGPT API key and add it into .env file.
+Create another .env.local file to add in MongoDB connection link.
 
-## Installation and Setup
-Follow the instructinos to run locally.
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/Evian-Chen/nextJS-practice.git
-cd nextJS-practice
-```
-
-### 2. Install dependencies
+### 3. Install Dependencies
+Use the following command to install required dependencies:
 ```bash
 npm install
 ```
 
-### 3. Run the development server
+### 4. Run Project Locally
+Run the development server with the following command:
 ```bash
 npm run dev
 ```
-
-## Reference
-[Next.js document](https://nextjs.org/docs)

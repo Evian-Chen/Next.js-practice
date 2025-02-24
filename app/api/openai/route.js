@@ -15,20 +15,16 @@ const openai = new OpenAI({
 
 const db = await connectDB("chatgpt");
 
-// setup all chatgpt db collections' connections
-const ChatMessage =
-  db.models.chatMessage || db.model("chatMessage", chatMessageSchema);
-const ChatSettings =
-  db.models.chatSettings || db.model("chatSettings", chatSettingsSchema);
-const TokenInfo =
-  db.models.tokenInfo || db.model("tokenInfo", tokenInfoSchema);
+// setup all chatgpt db connections
+const ChatMessage = db.models.chatMessage || db.model("chatMessage", chatMessageSchema);
+const ChatSettings = db.models.chatSettings || db.model("chatSettings", chatSettingsSchema);
+const TokenInfo = db.models.tokenInfo || db.model("tokenInfo", tokenInfoSchema);
 
 /***
  * This funtion save msg from frontend to MongoDB Atlas and save the in DB
  */
 export async function POST(request) {
   console.log("send POST function received.");
-
 
   try {
     const { role, content } = await request.json();
@@ -100,7 +96,6 @@ export async function POST(request) {
 }
 
 export async function GET() {
-
   try {
     let tokenData = await TokenInfo.findOne();
 
