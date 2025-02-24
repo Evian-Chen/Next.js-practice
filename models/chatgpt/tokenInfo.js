@@ -9,7 +9,4 @@ const tokenInfoSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const tokenInfo =
-  mongoose.models.tokenInfo || mongoose.model("tokenInfo", tokenInfoSchema);
-
-export default tokenInfo;
+export default tokenInfoSchema;

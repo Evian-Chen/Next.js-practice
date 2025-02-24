@@ -1,3 +1,5 @@
+// /models/chatgpt/chatSettings.js
+
 /**
  * This file is to define model setup schema.
  * NOT include message, message is a JSON format collected from /history
@@ -5,7 +7,7 @@
 
 import mongoose from "mongoose";
 
-const setupSchema = new mongoose.Schema({
+const chatSettingsSchema = new mongoose.Schema({
     model: { type: String, required: true },
     // message: { type: JSON, default: "", required: true },
     n: { type: Number, required: true },
@@ -19,6 +21,5 @@ const setupSchema = new mongoose.Schema({
     stop: { type: mongoose.Schema.Types.Mixed, default: null, required: false },
 }, {timestamps: true});
 
-const chatSettings = mongoose.models.chatSettings || mongoose.model("chatSettings", setupSchema);
+export default chatSettingsSchema;
 
-export default chatSettings;

@@ -1,5 +1,5 @@
 /**
- * /send/route.js
+ * /openai/route.js
  * This file get user message input and save it to MongoDB
  */
 
@@ -18,7 +18,7 @@ const openai = new OpenAI({
  */
 export async function POST(request) {
   console.log("send POST function received.");
-  await connectDB();
+  await connectDB("chatgpt");
 
   try {
     const { role, content } = await request.json();
@@ -61,7 +61,7 @@ export async function POST(request) {
 
     // overwrite the current tokens information
     const tokens = await tokenInfo.findOneAndUpdate(
-      {},  // no condition
+      {},  // find the first data
       {
         prompt: aiReply.usage.prompt_tokens,
         completion: aiReply.usage.completion_tokens,
@@ -89,7 +89,7 @@ export async function POST(request) {
 }
 
 export async function GET() {
-  await connectDB();
+  await connectDB("chatgpt");
 
   try {
     let tokenData = await tokenInfo.findOne();

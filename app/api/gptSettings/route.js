@@ -3,18 +3,23 @@
  * This file update the model setup for a single time conversation
  */
 
-import chatSettings from "@/models/chatgpt/chatSettings";
+import { chatSettingsSchema } from "@/models/chatgpt/chatSettings";
+import { connectDB } from "@/lib/mongodb";
 
 export async function POST(request) {
   try {
-    /**
-     * Only three options are opened to users to modify but there are more options in DB
-     * params need to be processed
-     */
+    // connect to correct database
+    const db = await connectDB("chatgpt");
+    const chatsettings = db.model("chatsettings", chatSettingsSchema);
+
     const userParams = await request.json();
 
-    const newSettings = new chatSettings(userParams);
-    await newSettings.save();
+    const updateSettings = await chatsettings.findOneAndUpdate(
+      {}, // find the first one
+      userParams,
+      { upsert: true, new: true }
+    );
+
     console.log("setting saved successfully");
 
     return new Response(
